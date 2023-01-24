@@ -13,8 +13,14 @@
     1. Strings
     1. Gerando HTML com PHP
 1. CRUD com PHP
-    1. O que é CRUD
     1. CRUD usando arquivos CSV
+        1. O que é CRUD
+        1. Introdução a arquivos CSV
+        1. Leitura de arquivos CSV
+        1. Criação de arquivos CSV
+        1. Atualização de arquivos CSV
+        1. Exclusão de dados de arquivos CSV
+        1. Considerações finais
     1. CRUD usando banco de dados MySQL
     1. Implementação de autenticação em operações CRUD
 1. Autenticação e sessão com PHP
@@ -505,5 +511,105 @@ Em resumo, gerar HTML com PHP é uma técnica importante na programação web, p
 
 ## CRUD com PHP
 
-### **O que é CRUD**
+### **CRUD usando arquivos CSV**
+
+#### **O que é CRUD**
+
+CRUD é a sigla para as quatro operações básicas realizadas em um banco de dados ou em uma aplicação de gerenciamento de dados: Create, Read, Update e Delete. Essas operações são usadas para gerenciar e manipular dados em um sistema.
+
+Create (Criação): Essa operação é utilizada para inserir novos dados em um banco de dados ou aplicação. Por exemplo, criar um novo usuário em um sistema de gerenciamento de usuários.
+
+Read (Leitura): Essa operação é utilizada para ler ou consultar dados existentes em um banco de dados ou aplicação. Por exemplo, ler o nome de um usuário a partir do seu ID.
+
+Update (Atualização): Essa operação é utilizada para atualizar dados existentes em um banco de dados ou aplicação. Por exemplo, atualizar o endereço de um usuário.
+
+Delete (Exclusão): Essa operação é utilizada para excluir dados existentes em um banco de dados ou aplicação. Por exemplo, excluir um usuário que não mais deseja utilizar o sistema.
+
+Essas quatro operações são fundamentais para gerenciar e manipular dados em um sistema e é comum que seja implementado em aplicações web.
+
+#### **Introdução a arquivos CSV**
+Arquivos CSV (Comma Separated Values, ou Valores Separados por Vírgulas em português) são um tipo de arquivo de texto simples que armazena dados em uma tabela, onde cada linha representa uma linha da tabela e cada coluna é separada por uma vírgula ou outro delimitador. Eles são amplamente utilizados para armazenar e compartilhar dados em uma variedade de aplicações, incluindo planilhas, banco de dados e aplicativos de gerenciamento de dados.
+
+Os arquivos CSV são fáceis de criar, ler e modificar manualmente, além de poderem ser lidos e escritos facilmente por muitas linguagens de programação, como o PHP, Python, R, entre outras. Eles também são compatíveis com a maioria das ferramentas de análise de dados e programas de planilha, como o Excel e Google Sheets.
+
+A estrutura básica de um arquivo CSV é uma lista de linhas, onde cada linha representa uma linha na tabela e cada coluna é separada por um delimitador, geralmente uma vírgula. Por exemplo, um arquivo CSV com informações de usuários pode ter a seguinte estrutura:
+
+```csv
+name,email,age1
+John Doe,johndoe@example.com,35
+Jane Smith,janesmith@example.com,28
+```
+
+É possível usar outros delimitadores como ponto e vírgula (;) ou tabulação (\t) dependendo da necessidade e configuração do sistema. Além disso, os arquivos CSV podem incluir cabeçalhos de coluna para facilitar a identificação dos dados, como no exemplo acima onde as colunas são "name", "email" e "age".
+
+É importante notar que os arquivos CSV não possuem informações de tipo de dados, portanto, as colunas podem conter diferentes tipos de dados como números, textos, datas, etc. Isso pode causar problemas na hora de processar esses dados, como erros de conversão, e é importante ter cuidado ao trabalhar com esses arquivos.
+
+Em resumo, os arquivos CSV são uma opção simples e amplamente utilizada para armazenar e compartilhar dados em uma variedade de aplicações. Eles são fáceis de criar, ler e modificar manualmente e podem ser lidos e escritos facilmente por muitas linguagens de programação. No entanto, é importante ter cuidado ao trabalhar com esses arquivos, pois eles não possuem informações de tipo de dados.
+
+#### **Leitura de arquivos CSV**
+
+A leitura de arquivos CSV em PHP pode ser feita de diversas formas, uma delas é usando a função nativa fgetcsv(). Essa função lê uma linha de um arquivo e retorna seus valores como um array, onde cada elemento do array representa uma coluna. O delimitador usado para separar as colunas é especificado como um argumento da função.
+
+Por exemplo, a seguinte função lê uma linha de um arquivo CSV e retorna seus valores como um array:
+
+```php
+function readCSV($file) {
+    $handle = fopen($file, 'r');
+    $data = fgetcsv($handle, 1000, ',');
+    fclose($handle);
+    return $data;
+}
+```
+
+É possível também ler todo o arquivo de uma só vez, como a seguir:
+
+```php
+function readAllCSV($file) {
+    $handle = fopen($file, 'r');
+    while ($data = fgetcsv($handle, 1000, ',')) {
+        $rows[] = $data;
+    }
+    fclose($handle);
+    return $rows;
+}
+```
+
+É importante notar que a função fgetcsv() lê uma linha de cada vez e deve ser chamada dentro de um laço para ler todas as linhas do arquivo.
+
+Outra forma de se ler arquivo CSV é utilizando a biblioteca SplFileObject, que oferece métodos para ler e escrever arquivos de forma mais eficiente e segura, além de possibilitar a utilização de expressão regular para definir o delimitador.
+
+Em resumo, a leitura de arquivos CSV em PHP pode ser feita usando a função nativa fgetcsv() ou a biblioteca SplFileObject. A função fgetcsv() lê uma linha de cada vez e deve ser chamada dentro de um laço para ler todas as linhas do arquivo. A biblioteca SplFileObject oferece métodos para ler e escrever arquivos de forma mais eficiente e segura. É importante lembrar de especificar o delimitador correto para separar as colunas e ter cuidado com a estrutura do arquivo CSV, pois a função fgetcsv() não possui tratamento de erros.
+
+A biblioteca SplFileObject é uma classe do PHP que é parte do pacote SPL (Standard PHP Library) e fornece uma maneira mais avançada de ler e escrever arquivos, incluindo arquivos CSV. Ela oferece diversos métodos para manipulação de arquivos, como iteração, filtragem e busca, além de oferecer recursos de segurança, como verificação de erros e tratamento de exceções.
+
+Uma das principais vantagens de se utilizar a biblioteca SplFileObject é a capacidade de trabalhar com arquivos grandes, pois ela carrega apenas uma linha de cada vez na memória, enquanto a função fgetcsv() carrega todo o arquivo na memória.
+
+Ao trabalhar com arquivos CSV, a classe SplFileObject pode ser inicializada com o caminho do arquivo e o modo de abertura (leitura, escrita, etc.). É possível especificar também o delimitador usado para separar as colunas.
+
+Por exemplo, o seguinte código lê todas as linhas de um arquivo CSV e imprime-as na tela:
+
+```php
+$file = new SplFileObject('data.csv');
+$file->setCsvControl(',');
+$file->setFlags(SplFileObject::READ_CSV);
+foreach($file as $line) {
+    print_r($line);
+}
+```
+
+Além de ler arquivos CSV, a biblioteca SplFileObject também oferece métodos para escrever em arquivos CSV e outros tipos de arquivos, como CSV com cabeçalho, XML, JSON, etc.
+
+Em resumo, a biblioteca SplFileObject é uma opção mais avançada para trabalhar com arquivos CSV em PHP, pois oferece métodos para manipulação de arquivos, recursos de segurança e capacidade de trabalhar com arquivos grandes. Ela pode ser usada para ler e escrever arquivos CSV, além de outros tipos de arquivos, como CSV com cabeçalho, XML, JSON. Ao utilizar essa biblioteca é importante prestar atenção na configuração do delimitador, para garantir que as colunas serão lidas e escritas corretamente.
+
+
+#### **Criação de arquivos CSV**
+
+
+#### **Atualização de arquivos CSV**
+
+
+#### **Exclusão de dados de arquivos CSV**
+
+
+#### **Considerações finais**
 
